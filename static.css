@@ -1,0 +1,17 @@
+/* Keep the original responsive layout, replacing only runtime-dependent states. */
+.elementor-invisible{visibility:visible!important}
+.elementor-motion-effects-element{transform:none!important}
+.elementor-nav-menu--dropdown.static-open{display:block!important;max-height:90vh!important;transform:scaleY(1)!important;overflow:auto;visibility:visible!important}
+.elementor-menu-toggle{cursor:pointer}
+.swiper-wrapper{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;transform:none!important}
+.swiper-wrapper::-webkit-scrollbar{display:none}
+.swiper-slide{flex:0 0 calc(100% / var(--visible-slides,5));scroll-snap-align:start}
+.swiper-slide img{max-width:100%}
+.swiper-lazy-preloader{display:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important}}
+.e-loop-item[hidden]{display:none!important}
+/* Long article code, tables and legal URLs must not widen mobile pages. */
+.elementor-widget-theme-post-content,.elementor-widget-text-editor,.elementor-widget-container{min-width:0}
+.elementor-widget-theme-post-content pre,.elementor-widget-text-editor pre{max-width:100%;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+.elementor-widget-theme-post-content table{display:block;max-width:100%;overflow-x:auto}
+.elementor-widget-theme-post-content p,.elementor-widget-text-editor p{overflow-wrap:anywhere}

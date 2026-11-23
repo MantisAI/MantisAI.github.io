@@ -1,0 +1,29 @@
+/*
+ * The Typekit service used to deliver this font or fonts for use on websites
+ * is provided by Adobe and is subject to these Terms of Use
+ * http://www.adobe.com/products/eulas/tou_typekit. For font license
+ * information, see the list below.
+ *
+ * lust-text:
+ *   - http://typekit.com/eulas/00000000000000007735dbe4
+ *   - http://typekit.com/eulas/00000000000000007735dbea
+ *
+ * © 2009-2026 Adobe Systems Incorporated. All Rights Reserved.
+ */
+/*{"last_published":"2025-12-23 08:55:59 UTC"}*/
+
+@import url("49d5ecd7659fb0aec6e5.css");
+
+@font-face {
+font-family:"lust-text";
+src:url("da61b2c20f20407760c6.bin") format("woff2"),url("539fa599869094647ddb.bin") format("woff"),url("06d65b12370a877683d8.bin") format("opentype");
+font-display:auto;font-style:italic;font-weight:300;font-stretch:normal;
+}
+
+@font-face {
+font-family:"lust-text";
+src:url("6e09c580681b6460222d.bin") format("woff2"),url("ba178cfd4e9b7fe827d6.bin") format("woff"),url("edad1d80ed3a731e116b.bin") format("opentype");
+font-display:auto;font-style:normal;font-weight:300;font-stretch:normal;
+}
+
+.tk-lust-text { font-family: "lust-text",serif; }
