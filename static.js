@@ -15,7 +15,7 @@ document.querySelectorAll('.elementor-menu-toggle').forEach(button => {
 document.querySelectorAll('.swiper').forEach(carousel=>{
  const widget=carousel.closest('[data-settings]');let settings={};try{settings=JSON.parse(widget?.dataset.settings||'{}')}catch{}
  const slides=carousel.querySelector('.swiper-wrapper');if(!slides)return;
- const update=()=>{const count=innerWidth<768?(settings.slides_to_show_mobile||2):innerWidth<1025?(settings.slides_to_show_tablet||3):(settings.slides_to_show||5);carousel.style.setProperty('--visible-slides',count);};
+ const update=()=>{const count=innerWidth<768?(settings.slides_to_show_mobile||2):innerWidth<1025?(settings.slides_to_show_tablet||3):(settings.slides_to_show||5);carousel.style.setProperty('--visible-slides',count);const gap=innerWidth<768?settings.image_spacing_custom_mobile?.size:innerWidth<1025?settings.image_spacing_custom_tablet?.size:innerWidth<=1600?settings.image_spacing_custom_laptop?.size:settings.image_spacing_custom?.size;carousel.style.setProperty('--slide-gap',(gap||0)+'px');};
  update();window.addEventListener('resize',update);
  carousel.querySelectorAll('.swiper-lazy-preloader').forEach(x=>x.remove());
  const next=()=>slides.scrollBy({left:slides.clientWidth/Number(getComputedStyle(carousel).getPropertyValue('--visible-slides')),behavior:'smooth'});
@@ -33,9 +33,23 @@ document.querySelectorAll('[data-static-contact]').forEach(form=>form.addEventLi
  const body=fields.map(([k,v])=>`${k.replace(/^form_fields\[|\]$/g,'')}: ${v}`).join('\n\n');
  location.href='mailto:hi@mantisnlp.com?subject='+encodeURIComponent('Mantis website enquiry')+'&body='+encodeURIComponent(body);
 }));
+const pagination = new Map();
+document.querySelectorAll('.e-load-more-anchor').forEach(anchor=>{
+ const widget=anchor.closest('.elementor-widget');const grid=widget?.querySelector('.elementor-loop-container');const control=widget?.querySelector('.e-loop__load-more');if(!grid)return;
+ let next=Number(anchor.dataset.page)<Number(anchor.dataset.maxPage)?new URL(anchor.dataset.nextPage,location.href).href:null;let pending=null;
+ const load=()=>{if(pending)return pending;if(!next)return Promise.resolve();const url=next;
+ pending=(async()=>{control?.setAttribute('aria-busy','true');const response=await fetch(url);if(!response.ok)throw Error('Could not load more entries');const doc=new DOMParser().parseFromString(await response.text(),'text/html');const source=doc.querySelector('.elementor-loop-container');if(!source)throw Error('Missing entries');
+ doc.querySelectorAll('link[rel=stylesheet]').forEach(link=>{const href=new URL(link.getAttribute('href'),url).href;if(![...document.styleSheets].some(s=>s.href===href)){const clone=link.cloneNode();clone.href=href;document.head.append(clone)}});
+ source.querySelectorAll(':scope > .e-loop-item').forEach(card=>{card.querySelectorAll('[href],[src],[srcset]').forEach(el=>{for(const attr of ['href','src'])if(el.hasAttribute(attr))el.setAttribute(attr,new URL(el.getAttribute(attr),url).href);if(el.hasAttribute('srcset'))el.removeAttribute('srcset')});grid.append(card)});
+ const following=doc.querySelector('.e-load-more-anchor');next=following&&Number(following.dataset.page)<Number(following.dataset.maxPage)?new URL(following.dataset.nextPage,url).href:null;if(!next&&control)control.hidden=true;
+ })().finally(()=>{pending=null;control?.removeAttribute('aria-busy')});return pending;};
+ const loadAll=async()=>{while(next)await load()};pagination.set(grid,loadAll);
+ control?.querySelector('a')?.addEventListener('click',async e=>{e.preventDefault();try{await load()}catch{control.setAttribute('aria-label','Loading failed. Please try again.')}});
+});
 document.querySelectorAll('.e-filter').forEach(filter=>{
  const grid=document.querySelector('.elementor-loop-container.elementor-grid');if(!grid)return;
- filter.querySelectorAll('button[data-filter]').forEach(button=>button.addEventListener('click',()=>{
+ filter.querySelectorAll('button[data-filter]').forEach(button=>button.addEventListener('click',async()=>{
+  try{await pagination.get(grid)?.()}catch{return}
   const value=button.dataset.filter;const clear=button.getAttribute('aria-pressed')==='true'||value==='__all';
   filter.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(clear?b.dataset.filter==='__all':b===button)));
   grid.querySelectorAll(':scope > .e-loop-item').forEach(card=>{card.hidden=!clear&&!card.classList.contains('category-'+value)&&!card.classList.contains('competence-'+value)});

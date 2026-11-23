@@ -15,3 +15,6 @@
 .elementor-widget-theme-post-content pre,.elementor-widget-text-editor pre{max-width:100%;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
 .elementor-widget-theme-post-content table{display:block;max-width:100%;overflow-x:auto}
 .elementor-widget-theme-post-content p,.elementor-widget-text-editor p{overflow-wrap:anywhere}
+.swiper-wrapper{gap:var(--slide-gap,0px)}
+.swiper-slide{flex-basis:calc((100% - (var(--visible-slides,5) - 1) * var(--slide-gap,0px)) / var(--visible-slides,5))}
+.e-loop__load-more[hidden]{display:none!important}
