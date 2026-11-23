@@ -27,12 +27,6 @@ document.querySelectorAll('.elementor-tab-title').forEach(title=>{
  title.addEventListener('click',()=>{const content=document.getElementById(title.getAttribute('aria-controls'));if(!content)return;const open=title.getAttribute('aria-expanded')!=='true';title.setAttribute('aria-expanded',String(open));title.classList.toggle('elementor-active',open);content.style.display=open?'block':'none';});
 });
 document.querySelectorAll('.back-history').forEach(a=>a.addEventListener('click',e=>{if(history.length>1){e.preventDefault();history.back();}}));
-document.querySelectorAll('[data-static-contact]').forEach(form=>form.addEventListener('submit',e=>{
- e.preventDefault();if(!form.reportValidity())return;
- const fields=[...new FormData(form)].filter(([k,v])=>v&& !['post_id','form_id','referer_title','queried_id'].includes(k));
- const body=fields.map(([k,v])=>`${k.replace(/^form_fields\[|\]$/g,'')}: ${v}`).join('\n\n');
- location.href='mailto:hi@mantisnlp.com?subject='+encodeURIComponent('Mantis website enquiry')+'&body='+encodeURIComponent(body);
-}));
 const pagination = new Map();
 document.querySelectorAll('.e-load-more-anchor').forEach(anchor=>{
  const widget=anchor.closest('.elementor-widget');const grid=widget?.querySelector('.elementor-loop-container');const control=widget?.querySelector('.e-loop__load-more');if(!grid)return;
